@@ -1,7 +1,7 @@
-# AI 技术学习路线
+# AI 技术全栈工程路线 (2026 版)
 
-> **文档定位**：面向工程师的 AI 知识体系梳理与工具全景导览，涵盖从基础原理到生产落地的完整学习路径、主流 AI 编码助手对比、开源 Skill 生态、知识管理工具及 Agent 框架全景。
-> **版本**：v0.1 | **更新时间**：2026-04-24 | **维护者**：Constantine
+> **文档定位**：面向资深工程师与架构师的 AI 知识体系 手册。涵盖从**基础原理 ** 到**企业级工程落地** 的完整全栈路径。
+> **版本**：v0.1| **更新时间**：2026-04-24 | **维护者**：王冲
 
 ---
 
@@ -9,18 +9,18 @@
 
 ---
 
-# 🌟 第一篇：理论与基座
-> 本篇包含第 1~2 章。建议初学者精读，旨在建立从 Transformer 注意力机制到模型量化、微调的全局大局观与底层原理认知。
+# 🌟 第一篇：基础原理
+> 本篇包含第 1~2 章。这是构建 AI 认知大厦的钢筋混凝土。我们不仅会剖析 **Transformer** 的数学微观世界，更会带你直面 2026 年的核心范式转移：从单纯的“概率生成”向**“慢思考推理 (Reasoning)”**与**“组相对策略优化 (GRPO)”**的底座进化。
 
 ---
 
 ## 1. 导引
 
 > **循序渐进的学习建议**：本文档按逻辑模块排列，并与学习路线图深度对齐。各阶段推荐入口：
-> - **L0 入门者**：从 [知识体系](#2-知识体系) 建立理论基座
-> - **L1 使用者**：通过 [编码助手](#3-编码助手) 实现即时提效
-> - **L2 & L3 开发者**：通过 [通用框架](#4-通用框架) 与 [Agent Skill](#5-agent-skill) 构建闭环应用
-> - **L4 架构师**：务必参考 [质量评估](#9-质量评估与可观测性)、[安全治理](#10-ai-安全与治理) 及 [企业级架构](#117-企业级架构与治理)
+> - **L0 入门者**：从 [2. 知识体系](#2-知识体系) 建立底层逻辑与数学基座。
+> - **L1 使用者**：通过 [3. 编码助手](#3-编码助手) 实现即时研发提效。
+> - **L2 & L3 开发者**：从 [4. 通用框架](#4-通用框架) 进阶至 [2.4 L3: 开发者](#24-l3-开发者) 与 [11.4 RAG 落地与性能调优](#114-rag-落地与性能调优)。
+> - **L4 架构师**：务必参考 [9. 质量评估与可观测性](#9-质量评估与可观测性)、[11.7 治理、安全与合规](#117-治理安全与合规) 及 [11.11 模型微调与强化实战](#1111-模型微调与强化实战)。
 
 ### 1.1 系统图谱
 
@@ -68,7 +68,7 @@ graph BT
 
 | 架构层级 | 全景维度名称 | 核心逻辑 (解决什么核心问题) | 涵盖的典型技术栈/理念 |
 |:---|:---|:---|:---|
-| **第一层：基座** | 1. 科学原理 | 决定模型推理能力上限的物理公式与训练理论。 | Transformer、Scaling Law、对齐 |
+| **第一层：基座** | 1. 基础原理 | 决定模型推理能力上限的物理公式与训练理论。 | Transformer、Scaling Law、对齐 |
 | **第一层：基座** | 2. 基础设施 | 支撑 AI 高吞吐运行的硬件肌肉。 | GPU、统一内存、端侧 NPU |
 | **第二层：核心** | 3. 数据与模型 | 提供“世界知识”与“逻辑认知能力”的原材料。 | 向量库、基础大模型、爬虫流水线 |
 | **第二层：核心** | 4. 研发工程 | 管控 AI 的输出边界，约束模型行为的工程手段。 | Prompt/Context/Harness 工程 |
@@ -874,12 +874,12 @@ mindmap
 | 智能体入门 | 低代码编排 | 利用 Dify/Flowise 等工具快速搭建简单的 RAG 与对话机器人 | 敏捷原型验证 | [Dify](https://github.com/langgenius/dify) |
 
 ### 2.4 L3: 开发者
-| 知识点分类 | 知识点 | 知识点说明 | 应用场景 | 主流开源项目及链接 | 
+| 知识点分类 | 知识点 | 知识点说明 | 应用场景 | 主流开源项目及链接 |
 |:----------:|:------:|:----------:|:--------:|:----------------------:|
-| **智能体开发** | **LangGraph / 状态机** | 基于有向图实现复杂多轮状态管理，支持自纠错与条件分支。 | **企业级复杂工作流** | [LangGraph](https://github.com/langchain-ai/langgraph) |
-| **智能体开发** | **多智能体系统 (MAS)** | 多个 Agent 之间通过对等协作或层级分工共同完成任务。 | 软件工程自动化、复杂调研 | [MetaGPT](https://github.com/geekan/MetaGPT) |
-| **智能体开发** | **MCP 协议与工具链** | 模型上下文协议，标准化连接本地数据库、终端及外部 API。 | 跨系统工具调用 | [MCP](https://modelcontextprotocol.io) |
-| **智能体开发** | **函数调用 (Fn Calling)** | 掌握 Pydantic 结构化输出与模型工具调用底层的 API 交互。 | 代码层集成、结构化输出 | [OpenAI API](https://platform.openai.com/docs/guides/function-calling) |
+| 智能体开发 | LangGraph / 状态机 | 基于有向图实现复杂多轮状态管理，支持自纠错与条件分支。 | 企业级复杂工作流 | [LangGraph](https://github.com/langchain-ai/langgraph) |
+| 智能体开发 | 多智能体系统 (MAS) | 多个 Agent 之间通过对等协作或层级分工共同完成任务。 | 软件工程自动化、复杂调研 | [MetaGPT](https://github.com/geekan/MetaGPT) |
+| 智能体开发 | MCP 协议与工具链 | 模型上下文协议，标准化连接本地数据库、终端及外部 API。 | 跨系统工具调用 | [MCP](https://modelcontextprotocol.io) |
+| 智能体开发 | 函数调用 (Fn Calling) | 掌握 Pydantic 结构化输出与模型工具调用底层的 API 交互。 | 代码层集成、结构化输出 | [OpenAI API](https://platform.openai.com/docs/guides/function-calling) |
 | 大模型微调 | SFT 对齐训练 | 指令微调使模型遵循人类指令，确保输出有用可信无害 | 领域垂直定制 | [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) |
 | 大模型微调 | RLHF / DPO | 基于人类反馈的强化学习，通过偏好打分优化模型 | 价值观对齐 | [TRL](https://github.com/huggingface/trl) |
 | 大模型微调 | LoRA / QLoRA | 参数高效微调，极大降低算力门槛 | 低算力微调实验 | [PEFT](https://github.com/huggingface/peft) |
@@ -887,8 +887,10 @@ mindmap
 | 多模态应用 | VLM | 视觉语言大模型 (GPT-4V/LLaVA)，处理图文理解 | 视觉对话、内容理解 | [LLaVA](https://github.com/haotian-liu/LLaVA) |
 
 ### 2.5 L4: 架构师
-| 知识点分类 | 知识点 | 知识点说明 | 应用场景 | 主流开源项目及链接 | 
+| 知识点分类 | 知识点 | 知识点说明 | 应用场景 | 主流开源项目及链接 |
 |:----------:|:------:|:----------:|:--------:|:----------------------:|
+| 推理经济学 | 知识蒸馏与投机采样 | 通过大拉小 (Distillation) 或投机采样加速推理并大幅降低成本。 | 企业级成本治理 | [Speculative Decoding](https://arxiv.org/abs/2211.17192) |
+| 强化训练 | GRPO / RLVR | 掌握推理模型的强化学习训练，实现基于规则验证的自我进化。 | 打造垂直领域推理模型 | [DeepSeek-R1](https://github.com/deepseek-ai/DeepSeek-R1) |
 | 模型部署 | GGUF / AWQ | 端侧与生产环境的模型压缩技术，显著降低显存占用 | 端侧部署、生产提速 | [vLLM](https://github.com/vllm-project/vllm) |
 | LLMOps | 评估与追踪 | 全生命周期追踪提示词与输出质量 | 生产级状态监控 | [LangSmith](https://smith.langchain.com/) |
 | 量化评估 | 测试评估工程 | 自动化量化评估 RAG 检索精准度与答案幻觉率 | 架构准出测试拦截 | [Ragas](https://github.com/explodinggradients/ragas) |
@@ -897,9 +899,8 @@ mindmap
 
 ---
 
-# 🛠️ 第二篇：生态与工具字典
-> 本篇包含第 3~8 章，梳理了目前全球数以百计的高优开源 AI 工具矩阵。
-> 建议无需死记硬背，请将其作为“开发黄页”和“工具字典”，在需要进行技术选型时按需查阅。
+# 🛠️ 第二篇：智能体生态
+> 本篇包含第 3~8 章。这是 AI 时代的“开发者黄页”。我们不再关注零散的插件，而是聚焦于构建**工业级智能体 (Industrial Agents)** 所需的原子能力：从具备自主文件接管能力的 **Claude Code/Antigravity** 到标准化的 **MCP 跨系统协议**。
 
 为了帮助您在海量工具中建立空间感，下图展示了第 3~8 章所列工具在现代 AI 工程技术栈中的物理分层架构：
 
@@ -1076,8 +1077,8 @@ graph TD
 
 ---
 
-# 🏢 第三篇：实战与企业落地
-> 经过前两篇的理论铺垫与工具库储备，本篇聚焦工业级业务流水线的整合实践。
+# 🏢 第三篇：实战智能体工程
+> 本篇包含第 9~11 章。这是整本手册的“实验室”。我们将带你将零散的工具组装成具备逻辑闭环、安全护栏与自我进化能力的**企业数字脑力**。重点涵盖 **Agentic RAG**、**智能体治理**以及基于 **GRPO** 的垂直领域推理训练实战。
 
 ---
 
@@ -1164,7 +1165,7 @@ graph TD
 >  return "LangGraph 是 2024 年推出的智能体编排框架"
 > ```
 
-#### 11.1.1 Function Calling
+#### 11.2.1 Function Calling
 **核心本质**：模型不再仅仅输出文本，而是输出结构化的“工具指令”。
 ```python
 # 1. 结构化提示词 (遵循 1.5.1 工程规范)
@@ -1182,7 +1183,13 @@ response = model_with_tools.invoke(messages)
 print(response.tool_calls) # 输出：[{'name': 'search_knowledge', 'args': {'query': 'LangGraph'}}]
 ```
 
-#### 11.1.2 记忆系统
+> 💡 **原理揭秘：工具注册机制 (Registration Mechanism)**
+> 当你使用 `@tool` 装饰器时，框架（如 LangChain）会通过 Python 的反射机制自动提取函数的**名称**、**参数类型声明**以及**文档字符串 (Docstring)**。
+> 1.  **Schema 生成**：这些信息被序列化为标准的 JSON Schema。
+> 2.  **模型绑定**：通过 `bind_tools`，这些 Schema 会作为对话上下文的一部分发送给模型，让模型“知道”自己拥有哪些手脚。
+> 3.  **精确描述的重要性**：Docstring 是 Agent 的“使用说明书”，如果描述模糊，模型将无法正确判断何时调用该工具。
+
+#### 11.2.2 记忆系统
 **核心本质**：区分短期“会话上下文”与长期“持久化状态”。
 ```python
 from langgraph.checkpoint.memory import MemorySaver
@@ -1253,7 +1260,7 @@ print(snapshot.next) # 输出: ('action',)
 app.invoke(None, config)
 ```
 
-#### 11.1.6 结构化输出
+#### 11.2.5 结构化输出
 **核心本质**：强制 Agent 返回符合业务 Schema 的 Pydantic 对象，而非模糊的自然语言。
 ```python
 from pydantic import BaseModel, Field
@@ -1271,7 +1278,7 @@ print(result.summary) # 直接获得结构化对象字段
 ### 11.3 多智能体
 当任务复杂度超出单一 Agent 负载时，需采用多智能体协同方案。
 
-#### 11.2.1 编排模式对比
+#### 11.3.1 编排模式对比
 | 模式 | 描述 | 典型框架 |
 |:---:|:---|:---|
 | **集中式 (Orchestrator)** | 一个指挥官 Agent 拆解任务并分发。 | LangGraph (StateGraph) |
@@ -1297,7 +1304,7 @@ graph LR
     end
 ```
 
-#### 11.2.2 专家级框架
+#### 11.3.2 专家级框架
 **核心逻辑**：基于 `AssistantAgent` (专家) 与 `UserProxyAgent` (环境执行器) 的对话驱动。
 ```python
 from autogen import AssistantAgent, UserProxyAgent
@@ -1309,7 +1316,7 @@ user_proxy = UserProxyAgent(name="Executor", code_execution_config={"work_dir": 
 
 # 开启自动化协作：专家写代码，执行器跑测试，失败了专家重写
 user_proxy.initiate_chat(coder, message="编写并运行一个计算斐波那契数列的脚本")
-```#### 11.2.3 MCP 协议实战 (跨平台工具集成)
+```#### 11.3.3 MCP 协议实战 (跨平台工具集成)
 基于 **MCP (Model Context Protocol)**，Agent 可以无缝调用第三方提供的标准工具。
 ```python
 from langgraph_mcp import MCPManager
@@ -1426,7 +1433,7 @@ graph TD
 | **第二层：混合粗筛** | **混合索引召回** | 结合 Vector（语义相似度）+ BM25（关键词匹配）+ Graph（关系推理）。 |
 | **第三层：精排压缩** | **重排与上下文压缩** | 引入专属的 Cross-Encoder 模型（如 BGE-Reranker）对粗筛结果进行深度二次打分精算。 |
 
-### 11.5 Karpathy Wiki：结构化长期记忆
+### 11.5 Karpathy Wiki
 
 > 2025-2026 年，Andrej Karpathy 提出了从“情绪编程 (Vibe Coding)”向“智能体工程 (Agentic Engineering)”跨越的核心理念。其核心在于：不再依赖不可见的黑盒向量数据库，而是通过构建一个人类可读、智能体可维护的 **LLM-Wiki** 作为系统的“长期记忆”与“真值底座”。
 
@@ -1526,7 +1533,7 @@ graph TD
     Audit --> User
 ```
 
-#### 11.7.1 运行时治理逻辑 (Runtime Governance)
+#### 11.7.1 运行时治理
 为了实现图示中的 7 步闭环，架构师需要关注以下核心工程模块：
 
 1.  **防御层 (Step 1-2)**：利用 **Lakera Guard** 拦截提示词注入，并结合 **Semantic Router** 实现业务意图的精准合规路由。
