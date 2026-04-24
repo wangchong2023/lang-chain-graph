@@ -88,31 +88,31 @@ graph BT
 
     subgraph TechStack ["🚀 现代智能体全栈 (The Stack)"]
         direction BT
-        L4["<b>Layer 4: 终端与执行 (Execution)</b><br/>'手脚' - 工具调用 / 沙箱 / UI"]
-        L3["<b>Layer 3: 逻辑编排 (Orchestration)</b><br/>'骨架' - 状态机 / DAG 工作流"]
-        L2["<b>Layer 2: 认知中枢 (Cognitive Hub)</b><br/>'大脑' - 推理引擎 / 知识理解"]
-        L1["<b>Layer 1: 基础设施 (Infra)</b><br/>'基座' - GPU / vLLM / Vector DB"]
+        Execution["<b>Layer 4: 终端与执行 (Execution)</b><br/>'手脚' - 工具调用 / 沙箱 / UI"]
+        Orchestration["<b>Layer 3: 逻辑编排 (Orchestration)</b><br/>'骨架' - 状态机 / DAG 工作流"]
+        Cognitive["<b>Layer 2: 认知中枢 (Cognitive Hub)</b><br/>'大脑' - 推理引擎 / 知识理解"]
+        Infra["<b>Layer 1: 基础设施 (Infra)</b><br/>'基座' - GPU / vLLM / Vector DB"]
         
-        L1 ==> L2 ==> L3 ==> L4
+        Infra ==> Cognitive ==> Orchestration ==> Execution
     end
 
     Governance -. "全生命周期干预" .-> TechStack
 
     %% 样式美化
-    style L4 fill:#eef2ff,stroke:#4f46e5,stroke-width:2px
-    style L3 fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px
-    style L2 fill:#fff1f2,stroke:#e11d48,stroke-width:2px
-    style L1 fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+    style Execution fill:#eef2ff,stroke:#4f46e5,stroke-width:2px
+    style Orchestration fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px
+    style Cognitive fill:#fff1f2,stroke:#e11d48,stroke-width:2px
+    style Infra fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
     style Governance fill:#fffbeb,stroke:#d97706,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
 | 层级 (Layer) | 核心定位 (Focus) | 代表组件 (Components) | 关键工程作用 |
 | :--- | :--- | :--- | :--- |
-| **L4: 终端与执行** | **价值交付与动作执行** | Cursor, OpenClaw, Toolbox | 实现模型从“对话”到“执行”的闭环，管理安全沙箱与工具环境。 |
-| **L3: 逻辑编排** | **系统架构与流程控制** | LangGraph, MCP, DAG | 将不确定的模型输出转化为确定的逻辑状态，管理多智能体协作流。 |
-| **L2: 认知中枢** | **理解、推理与决策** | GPT-4o, DeepSeek, Hermes | 作为认知引擎，负责指令解析、知识检索触发与长效认知进化。 |
-| **L1: 基础设施** | **算力底座与长效记忆** | NVIDIA H20, vLLM, Vector DB | 提供高吞吐推理算力与海量非结构化数据的语义持久化存储。 |
-| **L5: 安全治理** | **合规约束与质量评估** | AgentOps, Guardrails, HITL | 提供全链路决策审计、合规风险拦截及客观的工程化质量评估。 |
+| **Layer 4: 终端与执行** | **价值交付与动作执行** | Cursor, OpenClaw, Toolbox | 实现模型从“对话”到“执行”的闭环，管理安全沙箱与工具环境。 |
+| **Layer 3: 逻辑编排** | **系统架构与流程控制** | LangGraph, MCP, DAG | 将不确定的模型输出转化为确定的逻辑状态，管理多智能体协作流。 |
+| **Layer 2: 认知中枢** | **理解、推理与决策** | GPT-4o, DeepSeek, Hermes | 作为认知引擎，负责指令解析、知识检索触发与长效认知进化。 |
+| **Layer 1: 基础设施** | **算力底座与长效记忆** | NVIDIA H20, vLLM, Vector DB | 提供高吞吐推理算力与海量非结构化数据的语义持久化存储。 |
+| **Layer 5: 安全治理** | **合规约束与质量评估** | AgentOps, Guardrails, HITL | 提供全链路决策审计、合规风险拦截及客观的工程化质量评估。 |
 
 
 ### 1.2 学习路线
@@ -871,12 +871,15 @@ mindmap
 | 提示词工程 | 引导工程 | Few-shot、CoT 等提升 LLM 表现的技巧 | 复杂任务规划 | [Prompt Engineering Guide](https://github.com/dair-ai/Prompt-Engineering-Guide) |
 | 数据基建 | 向量数据库 | 海量高维向量数据的近似最近邻检索与长效存储 | 专属知识库检索底层 | [Milvus](https://github.com/milvus-io/milvus) |
 | 应用架构 | RAG | Embedding + Vector DB + LLM，解决幻觉与私有数据 | 企业专属知识库 | [LangChain RAG](https://python.langchain.com/docs/tutorials/rag/) |
-| 智能体架构 | ReAct | Reasoning + Acting 循环，LLM 自主决策调用工具 | 自动化办公 | [LangGraph](https://github.com/langchain-ai/langgraph) |
+| 智能体入门 | 低代码编排 | 利用 Dify/Flowise 等工具快速搭建简单的 RAG 与对话机器人 | 敏捷原型验证 | [Dify](https://github.com/langgenius/dify) |
 
 ### 2.4 L3: 开发者
 | 知识点分类 | 知识点 | 知识点说明 | 应用场景 | 主流开源项目及链接 | 
 |:----------:|:------:|:----------:|:--------:|:----------------------:|
-| 大模型预训练 | LLM 训练 | Next-Token Prediction 训练，构建核心推理基座 | 基础基座模型构建 | [GPT-NeoX](https://github.com/EleutherAI/gpt-neox) |
+| **智能体开发** | **LangGraph / 状态机** | 基于有向图实现复杂多轮状态管理，支持自纠错与条件分支。 | **企业级复杂工作流** | [LangGraph](https://github.com/langchain-ai/langgraph) |
+| **智能体开发** | **多智能体系统 (MAS)** | 多个 Agent 之间通过对等协作或层级分工共同完成任务。 | 软件工程自动化、复杂调研 | [MetaGPT](https://github.com/geekan/MetaGPT) |
+| **智能体开发** | **MCP 协议与工具链** | 模型上下文协议，标准化连接本地数据库、终端及外部 API。 | 跨系统工具调用 | [MCP](https://modelcontextprotocol.io) |
+| **智能体开发** | **函数调用 (Fn Calling)** | 掌握 Pydantic 结构化输出与模型工具调用底层的 API 交互。 | 代码层集成、结构化输出 | [OpenAI API](https://platform.openai.com/docs/guides/function-calling) |
 | 大模型微调 | SFT 对齐训练 | 指令微调使模型遵循人类指令，确保输出有用可信无害 | 领域垂直定制 | [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) |
 | 大模型微调 | RLHF / DPO | 基于人类反馈的强化学习，通过偏好打分优化模型 | 价值观对齐 | [TRL](https://github.com/huggingface/trl) |
 | 大模型微调 | LoRA / QLoRA | 参数高效微调，极大降低算力门槛 | 低算力微调实验 | [PEFT](https://github.com/huggingface/peft) |
@@ -1268,7 +1271,7 @@ print(result.summary) # 直接获得结构化对象字段
 ### 11.3 多智能体
 当任务复杂度超出单一 Agent 负载时，需采用多智能体协同方案。
 
-#### 11.3.1 编排模式对比
+#### 11.2.1 编排模式对比
 | 模式 | 描述 | 典型框架 |
 |:---:|:---|:---|
 | **集中式 (Orchestrator)** | 一个指挥官 Agent 拆解任务并分发。 | LangGraph (StateGraph) |
@@ -1294,7 +1297,7 @@ graph LR
     end
 ```
 
-#### 11.3.2 专家级框架
+#### 11.2.2 专家级框架
 **核心逻辑**：基于 `AssistantAgent` (专家) 与 `UserProxyAgent` (环境执行器) 的对话驱动。
 ```python
 from autogen import AssistantAgent, UserProxyAgent
@@ -1306,7 +1309,7 @@ user_proxy = UserProxyAgent(name="Executor", code_execution_config={"work_dir": 
 
 # 开启自动化协作：专家写代码，执行器跑测试，失败了专家重写
 user_proxy.initiate_chat(coder, message="编写并运行一个计算斐波那契数列的脚本")
-```#### 11.3.3 MCP 协议实战 (跨平台工具集成)
+```#### 11.2.3 MCP 协议实战 (跨平台工具集成)
 基于 **MCP (Model Context Protocol)**，Agent 可以无缝调用第三方提供的标准工具。
 ```python
 from langgraph_mcp import MCPManager
@@ -1329,16 +1332,15 @@ workflow.add_node("mcp_action", ToolNode(mcp_tools))
 **工程逻辑**：通过语义漏斗模型（召回 -> 重排）确保检索的信噪比。
 ```mermaid
 graph TD
-    subgraph Funnel ["语义漏斗 (Semantic Funnel)"]
-        direction TB
-        DB[(万级文档库)] --> Recall["1. 粗筛召回 (Recall)"]
-        Recall -- "Top 50 候选" --> Rerank["2. 深度重排 (Reranking)"]
-    end
+    Data["原始文档 (PDF/MD)"] --> Split["语义切块 (Chunking)"]
+    Split --> Embed["向量化 (Embedding)"]
+    Embed --> DB[(向量数据库)]
     
-    Rerank -- "Top 5 精选事实" --> Context["3. 上下文拼接 (Prompt)"]
-    Context --> LLM["4. 生成回答 (Generation)"]
-    
-    style Funnel fill:#f0f9ff,stroke:#0369a1,stroke-dasharray: 5 5
+    Query["用户提问"] --> Q_Embed["提问向量化"]
+    Q_Embed --> Search["语义检索 (Retrieval)"]
+    DB -.-> Search
+    Search -- "Top-K 片段" --> Rerank["重排 (Rerank)"]
+    Rerank -- "精准上下文" --> LLM["LLM 生成答案"]
 ```
 | 模块 | 推荐工具体系 | 选型依据与高阶技术剖析 (Advanced RAG) |
 |:----:|:------------|:-----------------|
@@ -1524,11 +1526,13 @@ graph TD
     Audit --> User
 ```
 
-#### 11.7.1 驾驭工程
-* **上下文工程 (CE)**：教 Agent 根据任务“按需拉取”相关文档。
-* **架构约束**：通过 Linter 规则强制 Agent 遵循代码规范。
-* **反馈循环**：实现“Agent 审 Agent”，自动打回重试。
-* **熵管理**：定期扫描并清偿 Agent 产生的技术债务。
+#### 11.7.1 运行时治理逻辑 (Runtime Governance)
+为了实现图示中的 7 步闭环，架构师需要关注以下核心工程模块：
+
+1.  **防御层 (Step 1-2)**：利用 **Lakera Guard** 拦截提示词注入，并结合 **Semantic Router** 实现业务意图的精准合规路由。
+2.  **推理与评估层 (Step 3-4)**：通过 **Reasoning Chain** 对任务进行前置安全自审，并利用模型能力对执行风险进行自动打分（Risk Scoring）。
+3.  **授权层 (Step 5-6)**：遵循 **HITL (人机协作)** 原则，高危操作必须经过人工授权才能进入最终的工具执行（Execute）。
+4.  **审计层 (Step 7)**：所有 Agent 行为必须接入 **AgentOps** 系统进行全链路存证，确保每一次决策都可追溯、可审计。
 
 #### 11.7.2 安全路由与意图拦截
 通过 **语义路由 (Semantic Router)** 拦截恶意攻击或进行意图分流：
@@ -1663,15 +1667,13 @@ graph LR
 
 ```mermaid
 graph LR
-    Data["1. 数据清洗"] --> SFT["2. 指令微调 (SFT)"]
-    SFT --> RL["3. 强化学习 (GRPO/DPO)"]
-    RL --> Merge["4. 权重合并"]
-    Merge --> Quant["5. 量化导出"]
-    Quant --> Eval["6. 自动化评估"]
-    Eval --> Deploy["7. 生产上线"]
+    Data["1. 数据清洗 (JSONL)"] --> SFT["2. 指令微调 (SFT)"]
+    SFT --> Merge["3. 权重合并 (Merge LoRA)"]
+    Merge --> Quant["4. 量化导出 (GGUF/FP8)"]
+    Quant --> Eval["5. 自动化跑分 (Eval)"]
+    Eval --> Deploy["6. 生产上线"]
     
     style SFT fill:#fdf2f8,stroke:#be185d,stroke-width:2px
-    style RL fill:#fff7ed,stroke:#c2410c,stroke-width:2px
     style Quant fill:#f0f9ff,stroke:#0369a1,stroke-width:2px
 ```
 
