@@ -1,0 +1,8 @@
+LangChain 是目前最流行的大语言模型应用开发框架，由 Harrison Chase 于 2022 年创建。
+它提供了模块化的组件体系，包括：模型 I/O (Model I/O)、检索 (Retrieval)、
+代理 (Agents)、链 (Chains) 和记忆 (Memory) 等核心模块。
+
+LangChain 的社区生态非常丰富，langchain-community 包集成了超过 700 个第三方组件，
+涵盖了文档加载、向量数据库、嵌入模型、LLM 提供商等多种接口。
+LCEL (LangChain Expression Language) 是其最新推荐的链路编排语法，
+支持流式处理、异步调用和批量执行。

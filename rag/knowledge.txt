@@ -1,0 +1,10 @@
+
+    LangChain 是一个功能强大的框架，专为构建大语言模型应用而设计。
+    它集成了大量的社区组件（langchain-community），支持多种向量数据库如 Chroma 和 FAISS。
+    
+    Chroma 是一个开源的嵌入数据库（Vector Database），它非常易于使用且支持持久化存储。
+    在 RAG 系统中，Chroma 负责索引文本向量并根据语义相似度进行检索。
+    
+    DeepSeek 模型（如 DeepSeek-chat）在处理中文语境和复杂逻辑时表现卓越。
+    RAG（检索增强生成）通过引入外部实时知识，显著提升了 LLM 回答的准确性并减少幻觉。
+    
