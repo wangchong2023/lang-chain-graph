@@ -1,6 +1,15 @@
-# LangChain & LangGraph 智能引擎 Demo
+# LangChain 基础实践
 
-本项目提供了一个标准化的工程实例，展示如何基于 **LangChain** 与 **LangGraph** 框架，从零构建具备状态记忆、自主推理以及外部工具调用能力的 **ReAct (Reasoning and Acting) 智能体引擎**。
+> [!IMPORTANT]
+> **架构迁移通知**：为了提供更清晰的工程化实践，本项目已将所有 **LangGraph** 相关的状态机编排内容迁移至根目录下的 [**/langgraph**](../langgraph) 文件夹。
+> 
+> 本目录 (`/langchain`) 目前仅保留以下内容作为参考：
+> 1. **LCEL 基础示例**: 在 `ai-demo.ipynb` 的前半部分展示了基本的 Chain 语法。
+> 2. **Legacy Demo**: `main.py` 是早期的单文件版 Agent 演示，不建议在生产参考。
+
+---
+
+# LangChain & LangGraph 智能引擎 Demo (Legacy)
 
 本文档将系统性阐述该工程的架构拓扑、框架底层机制、部署流程及模块测试验证方案。
 

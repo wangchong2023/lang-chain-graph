@@ -1,0 +1,1 @@
+RAG（检索增强生成）的进阶技术包括混合检索 (Hybrid Search) 和 上下文压缩 (Contextual Compression)。

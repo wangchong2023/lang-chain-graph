@@ -1,4 +1,43 @@
-venv
-.vscode/settings.json
-lang-chain-graph.code-workspace
+# ==========================================
+# AI-Learning 项目 Git 忽略规则 (2026 版)
+# ==========================================
+
+# --- 1. Python 环境与字节码 ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+build/
+dist/
+*.egg-info/
+
+# --- 2. 敏感配置与 API 密钥 (核心安全) ---
+.env
+.env.local
+.env.*.local
+
+# --- 3. AI 运行时数据与存储 (避免提交海量二进制) ---
+# 忽略所有 sqlite 的临时状态文件
+*.sqlite-shm
+*.sqlite-wal
+# 忽略 ChromaDB 等向量索引的数据目录
+**/vector_storage/chroma_db/
+**/chroma_db/
+# 忽略较大的模型权重或本地模型文件
+*.bin
+*.gguf
+*.onnx
+
+# --- 4. IDE 与系统文件 ---
+.vscode/
+.idea/
 .DS_Store
+Thumbs.db
+*.code-workspace
+
+# --- 5. 文档与日志 ---
+*.log
+doc/output/
+scratch/
