@@ -1987,6 +1987,17 @@ else:
 3.  **技术债：提示词与代码解耦**
     *   **Prompt 治理**：严禁将长 Prompt 硬编码在业务逻辑中。应通过 **Prompt Registry (注册表)** 进行统一版本化管理，实现"提示词热更新"而无需重启服务。
 
+#### 11.11.1 技术决策矩阵：RAG vs. 微调 vs. 长上下文
+架构师在面临特定业务需求时，应遵循以下决策矩阵：
+
+| 维度 | RAG (检索增强) | 微调 (Fine-tuning) | 长上下文 (Long Context) |
+| :--- | :--- | :--- | :--- |
+| **知识更新频率** | **实时** (毫秒级更新索引) | 极慢 (需重新训练) | 中等 (取决于输入长度) |
+| **外部事实准确性** | **高** (具备明确溯源) | 容易产生幻觉 (权重固化) | 高 (但受注意力分散影响) |
+| **领域风格/格式** | 无法改变模型语气 | **极强** (可深度模仿特定格式) | 较强 (Few-shot 引导) |
+| **实现成本** | 低 (只需索引工程) | **极高** (算力与高质量数据) | 中 (Token 消耗随输入剧增) |
+| **适用场景** | 动态知识库、合规查询 | 特定协议掌握、逻辑强化 | 短期多文档分析、项目全局理解 |
+
 
 ### 11.12 企业级选型决策矩阵
 
@@ -2049,92 +2060,94 @@ graph TD
 | **Agentic Engineering**| Agentic Engineering | 智能体工程：2026 年的核心研发范式，强调通过确定性的工程框架（如状态机、Wiki）来约束和增强大模型的自主行动能力。 |
 | **AgentOps** | Agent Operations | 智能体运维：涵盖 Agent 在生产环境中的监控、日志审计、成本配额控制及安全性熔断机制。 |
 | **Agent Substrate**| Agent Substrate | 智能体底层基质：指为 Agent 提供运行所需的工具执行环境、沙箱隔离、长期记忆管理及权限治理的基础设施层（如 OpenHarness）。 |
-| **AWQ / GPTQ** | Activation-aware Weight / Generative Post-Training Quantization | 激活感知量化技术，目前主流的模型压缩手段，极大削减模型运行的显存需求。 |
+| **AWQ / GPTQ** | Activation-aware Weight / GPT Quantization | 激活感知量化技术，目前主流的模型压缩手段，极大削减模型运行的显存需求。 |
 | **Beam Search**| Beam Search | 束搜索：一种启发式生成算法，探索多个概率分支以获得最优全局结果。 |
 | **Catastrophic Forgetting**| Catastrophic Forgetting | 灾难性遗忘：模型在接受新知识微调训练时，丧失原有通用知识的现象。 |
 | **CE** | Context Engineering | 上下文工程：关注在长上下文时代，如何通过数据切片提取与向量重排来极大提高输给模型的信噪比。 |
-| **Context Caching** | Context Caching | 上下文缓存：在 API 服务端持久化存储高频 Prompt 或文档向量，后续请求命中缓存时可大幅降低首字延迟与 Token 成本，是 RAG 本的核心技术。 |
+| **Confidence** | Confidence | 置信度：Logits 经过 Softmax 归一化后的概率值（0-1 之间）。代表模型对预测结果的“确信程度”。 |
+| **Context Caching** | Context Caching | 上下文缓存：在 API 服务端持久化存储高频 Prompt 或文档向量，后续请求命中缓存时可大幅降低首字延迟与 Token 成本。 |
 | **CoT** | Chain of Thought | 思维链提示：引导模型逐步展现推理过程，以解决复杂逻辑问题。 |
-| **CRAG** | Corrective RAG | 纠错检索增强：一种引入大模型作为评委的高阶策略，能对检索结果打分，并在查无资料时主动触发 Web 搜索兜底。 |
+| **CRAG** | Corrective RAG | 纠错检索增强：引入大模型作为评委，对检索结果打分，并在查无资料时主动触发搜索。 |
 | **Ctx** | Context Window | 上下文窗口：模型在单次交互会话中，能处理的最大 Token 长度。 |
-| **CUDA** | Compute Unified Device Architecture | 显卡并行计算架构：NVIDIA 推出的并行计算平台和编程模型，是目前 AI 训练与推理事实上的行业标准环境。 |
-| **Decode** | Decoding Phase | 生成阶段：大模型推理的第二阶段，逐个生成 Token。该阶段受显存带宽限制 (Memory-bandwidth bound)，决定了流式输出的速度 (TBT)。 |
+| **CUDA** | Compute Unified Device Architecture | 英伟达并行计算架构：AI 训练与推理事实上的行业标准环境。 |
+| **Decode** | Decoding Phase | 生成阶段：大模型推理的第二阶段，逐个生成 Token。该阶段受显存带宽限制 (Memory-bandwidth bound)。 |
 | **DPO** | Direct Preference Optimization | 直接偏好优化：比 RLHF 更轻量的高级对齐算法，直接利用偏好数据微调。 |
 | **Embedding** | Embedding | 向量嵌入：将高维离散数据（如文本图片）映射为机器计算友好的低维稠密向量。 |
-| **Emergent Abilities** | Emergent Abilities | 涌现能力：随着模型参数与训练数据规模越过某个物理阈值后，模型突然表现出的极强顿悟与逻辑推理能力。 |
-| **Few-shot** | Few-shot Prompting | 少样本学习/提示：在 Prompt 中仅提供极少量的示例，以此引导模型理解特定模式。 |
+| **Emergent Abilities** | Emergent Abilities | 涌现能力：随着模型参数与训练数据规模越过某个物理阈值后，模型表现出的极强逻辑推理能力。 |
+| **Few-shot** | Few-shot Prompting | 少样本学习：在 Prompt 中仅提供极少量的示例，以此引导模型理解特定模式。 |
 | **Fine-tuning** | Fine-tuning | 模型微调：在预训练权重的基础上，使用特定领域数据进行深度二次训练。 |
 | **FLOPS** | Floating Point Operations Per Second | 浮点运算次数：衡量 AI 算力显卡与物理基础设施效能的核心指标。 |
 | **Fn Calling** | Function Calling | 函数调用：让大语言模型输出结构化参数（如 JSON）以触发外部程序执行。 |
-| **GGUF** | GPT-Generated Unified Format | 优化的模型离线权重量化文件格式，专为 CPU 和个人 PC 进行极速加载而设计。 |
-| **GRPO** | Group Relative Policy Optimization | 组相对策略优化：DeepSeek-R1 采用的强化学习算法，通过组内相对评分取代了复杂的批判者模型 (Critic)，是训练强推理模型的现代标准。 |
-| **GPU** | Graphics Processing Unit | 图形处理器：AI 计算的核心心脏。凭借成千上万的并行计算核心，支撑起大模型海量的矩阵运算需求。 |
-| **Hallucination** | Hallucination | 幻觉：由于模型原理缺陷，导致其生成看似合理但实际上虚假或背离事实的内容。 |
-| **HBM** | High Bandwidth Memory | 高带宽显存：专为高性能计算设计的新型显存。其极高的吞吐带宽是决定大模型推理速度（TBT）的最核心硬件瓶颈。 |
-| **HE** | Harness Engineering | 测试评估工程：建立标准化的准出质检闭环流水线，将大模型模糊的回答拆解为客观可量化打分的数值指标。 |
-| **HITL** | Human-in-the-Loop | 人机协作：让 Agent 智能体在执行高危操作前发回申请以获取人工授权的机制。 |
-| **HNSW** | Hierarchical Navigable Small World | 分层可导航小世界：目前工业界最主流的近似最近邻（ANN）向量检索底层算法，支持海量高维数据的毫秒级召回。 |
-| **Hybrid Search**| Hybrid Search | 混合搜索：在 RAG 场景中同时结合关键词搜索 (BM25) 与向量搜索 (Vector) 的检索增强技术。 |
-| **HyDE** | Hypothetical Document Embeddings | 假设性文档嵌入：一种高阶预检索优化策略。先让 LLM 生成一段假设性答案，再拿去向量库中检索，以解决提问与专业文档词汇不匹配的问题。 |
-| **Logits** | Logits | 未归一化的原始分：模型在生成词语时，输出层产生的原始数值。分值越高，表示模型认为该词出现的可能性越大。 |
-| **Confidence** | Confidence | 置信度：Logits 经过 Softmax 归一化后的概率值（0-1 之间）。代表模型对预测结果的“确信程度”。 |
-| **KV Cache** | Key-Value Cache | 键值缓存：模型推理时存储已计算的 Token 状态矩阵，以大幅加速生成的技术。 |
-| **LLM** | Large Language Model | 大语言模型：基于海量文本数据预训练的海量参数深度学习神经网络。 |
-| **LoRA** | Low-Rank Adaptation | 低秩微调：一种对硬件资源极其友好（Resource-friendly）的参数高效对齐训练技术。 |
-| **MCP** | Model Context Protocol | 模型上下文协议：用于统一和标准化大模型应用与外部工具间的数据通信传输。 |
-| **MLA** | Multi-Head Latent Attention | 多头潜在注意力：通过在潜空间压缩 KV Cache 的高阶注意力机制，是目前解决长文本显存爆炸、提升推理速度的工业级核心技术。 |
-| **MLX** | MLX (Apple ML Framework) | 苹果官方机器学习框架：专为 Apple Silicon 统一内存架构优化，使 Mac 成为高性能低功耗的本地 AI 推理工作站。 |
-| **MoE** | Mixture of Experts | 混合专家模型：将网络切分，推理时仅激活对应专家的参数模块以平衡计算开销。 |
-| **MQA/GQA** | Multi-Query / Grouped-Query Attention | 分组查询注意力机制：优化模型内部架构，以极大地缓解推理端的内存带宽压力。 |
-| **NPU** | Neural Processing Unit | 神经网络处理器：专为 AI 推理优化的专用集成电路。在端侧设备中提供比 GPU 更高的能效比，适合本地化 AI 任务。 |
-| **Overfitting**| Overfitting | 过拟合：模型过度死板地适应了训练数据，从而丧失了对新场景的一般化推广能力的通病。 |
-| **PagedAttention** | PagedAttention | 分页注意力机制：vLLM 核心的显存分页管理技术，大幅提升高并发推理的吞吐量。 |
-| **PEFT** | Parameter-Efficient Fine-Tuning | 参数高效微调：指在不改变大模型大部分权重的前提下，仅训练极少量新增参数（如 LoRA）以适配下游任务的技术集合。 |
-| **PE (Prompt Engineering)** | Prompt Engineering | 提示词工程：系统化地设计、测试与优化人类输入给大模型的引导文本规范以消除随机熵。 |
-| **PPO** | Proximal Policy Optimization | 近端策略优化：强化学习中的经典安全算法，是构建早期 RLHF 对齐训练的核心底座。 |
-| **Plan-and-Execute** | Plan-and-Execute | 计划并执行模式：Agent 设计模式之一。先生成完整计划，再由执行器逐一执行，适合低延迟、高吞吐任务。 |
-| **Prefill** | Prefilling Phase | 预填充阶段：大模型推理的第一阶段，处理输入的 Prompt。该阶段属于计算密集型 (Compute-bound)，决定了首字延迟 (TTFT)。 |
-| **Pre-training** | Pre-training | 预训练：大模型训练的第一阶段，在大规模无标注原始数据上，为模型构建通识世界知识。 |
-| **Quantization**| Quantization | 模型量化：通过降低模型参数的计算精度（如 FP16→INT4），大幅压缩模型体积以适配消费级显卡运行。 |
-| **RAG** | Retrieval-Augmented Generation | 检索增强生成：结合外部专用知识库检索与大模型生成能力的一种经典应用架构。 |
-| **RAGAS** | RAG Assessment | RAG 评估框架：业内标准的量化评估体系，涵盖上下文召回率、精确率、忠实度与答案相关性四大核心指标。 |
-| **RBAC** | Role-Based Access Control | 基于角色的访问控制：在各大企业级 API 网关部署环节中使用的标准鉴权防爆手段。 |
-| **ReAct** | Reasoning and Acting | 推理与行动：赋予 Agent 通过“思考->行动->观察反馈”进行循环决策的经典范式。 |
-| **Reflexion** | Reflexion | 反思模式：一种自我博弈的设计范式。Agent 通过内部审校角色对输出进行批判与打回重做，以实现自我性能提升。 |
-| **Reranking**| Reranking | 重排：在 RAG 流程中，对初步检索回来的候选片段进行二次深度精算排序，以确保最精准的信息进入上下文窗口。 |
-| **Repetition Penalty**| Repetition Penalty | 重复惩罚：模型生成侧的一种调节参数，强制降低已输出词汇的概率以避免陷入复读。 |
-| **RLHF** | Reinforcement Learning from Human Feedback | 基于人类反馈的强化学习：通过收集人类偏好打分，强行对齐大模型行为与价值观。 |
-| **RLVR** | Reinforcement Learning from Verified Rewards | 基于验证奖励的强化学习：通过编译器反馈、数学真值等客观指标引导模型进化，是 DeepSeek-R1 等强推理模型摆脱对人类标注依赖的关键。 |
-| **ROCm** | Radeon Open Compute | AMD 的开源算力生态：AMD 推子的并行计算堆栈，旨在提供与 CUDA 兼容的开发环境，是目前非 NVIDIA 芯片阵营的主流选择。 |
-| **RoPE** | Rotary Position Embedding | 旋转位置编码：目前国内外各大开源主流大模型中标配的底层文字位置感知编码方案。 |
-| **Scaling Law** | Scaling Law | 规模扩展法则：深度学习领域的一个核心经验定律——只要持续增加算力、参数 and 数据，模型的智能基座就会稳定上升。 |
-| **Self-Attention** | Self-Attention | 自注意力机制：大模型灵魂，让模型在处理每个词元时能够同时权衡关注全局其他词元。 |
-| **Semantic Router**| Semantic Router | 语义路由：利用 Embedding 快速筛选用户意图，从而将 Query 导向不同专用 Agent 或工具的轻量级组件。 |
-| **SFT** | Supervised Fine-Tuning | 监督微调：使用大量标准问答对训练模型，强制其学会如何遵循人类特定任务指示。 |
-| **System-2 Reasoning** | System-2 Reasoning | 慢思考/推理引擎：模拟人类的深度思考过程，模型在输出前通过内部思维链进行自我反思、验证与逻辑纠错。 |
-| **SNR** | Signal-to-Noise Ratio | 信噪比：上下文工程中的核心指标，用于衡量提交给大模型的超长文本背景中，真实有用信息与无关干扰信息的比例。 |
-| **Speculative Decoding**| Speculative Decoding | 投机采样/推理：利用小模型快速生成草稿，由大模型并行验证，在不损失精度的情况下将推理速度提升 2-3 倍的工程技巧。 |
-| **Stateless** | Stateless | 无状态：大模型的物理特性。指模型不具备跨请求的持久记忆，每一轮对话的“记忆”实质上是通过后端将历史上下文全量重新提交给模型实现的。 |
-| **Structured Output**| Structured Output | 结构化输出：模型能够稳定返回符合特定 Schema（如 JSON/Pydantic）的能力，是 Agent 调用的基石。 |
-| **Temperature**| Temperature | 温度：调节模型输出随机性的核心控制参数（越低越刻板准确，越高越具创造性）。 |
-| **Token** | Token | 词元：模型处理文本的基础物理单位。在经济性层面，API 调用通常按百万词元（Million Tokens）计费，且输入（Prompt）与输出（Completion）价格不同。 |
-| **Top-p / Top-k**| Top-p / Top-k | 解码采样策略：通过截断低概率分支或限制绝对数量，来控制模型生成的随机词池。 |
-| **TBT** | Time Between Tokens | 词间延迟：模型生成阶段两个连续 Token 之间的平均耗时，反映了用户感知的流式刷新速度。 |
-| **TTC** | Test-Time Compute | 推理侧算力扩展：2025-2026 年核心趋势，指通过增加模型在推理阶段的“思考时间”来换取更高维度的逻辑表现。 |
-| **TTFT** | Time to First Token | 首字延迟：从用户发送请求到模型吐出第一个 Token 的耗时，主要受 Prefill 阶段速度影响。 |
-| **Vector DB** | Vector Database | 向量数据库：专门为了高效存储与大规模相似度检索 Embedding（向量）而生的特殊数据库。 |
-| **Vibe Coding** | Vibe Coding | 感应式编程：2026 年兴起的开发范式，指开发者通过自然语言描述“感觉”与“意图”，由 Agent (如 Bolt.new/Windsurf) 自动补全所有底层架构、UI 实现与部署逻辑的编程方式。 |
-| **Reasoning Token** | Reasoning Token | 推理词元：推理模型在输出最终答案前，在内部进行自我反思、纠错与路径探索时产生的 Token。通常在前端以“思维链”形式展示，但不计入最终回答长度。 |
-| **VLM** | Vision-Language Model | 视觉语言大模型：打破单一模态，能够同时理解并融合图片与人类语言语义的模型。 |
-| **VRAM** | Video RAM | 显存：GPU 运行模型时承载权重与 KV Cache 的内存。显存容量决定了能够承载的模型参数规模（如 8G 显存是运行 7B 级别模型的底线）。 |
-| **Sparse-Dense** | Sparse & Dense Retrieval | 混合检索：结合传统的关键词检索（稀疏向量）与大模型的语义检索（稠密向量），提升搜索的鲁棒性。 |
-| **Zero-shot** | Zero-shot Prompting | 零样本提示：人类在对大模型提问时，完全不提供任何演示样例而直接要求它做答。 |
+| **GGUF** | GPT-Generated Unified Format | 优化的模型权重量化格式，专为 CPU 和个人 PC 进行极速加载而设计。 |
+| **GQA** | Grouped-Query Attention | 分组查询注意力机制：优化模型内部架构，以缓解推理端的内存带宽压力。 |
+| **GraphRAG** | Graph-based RAG | 图检索增强生成：利用知识图谱增强检索的 RAG 变体，擅长处理跨文档的复杂语义连接。 |
+| **GRPO** | Group Relative Policy Optimization | 组相对策略优化：DeepSeek-R1 采用的强化学习算法，通过组内相对评分取代了 Critic 模型。 |
+| **GPU** | Graphics Processing Unit | 图形处理器：AI 计算的核心心脏。 |
+| **Hallucination** | Hallucination | 幻觉：由于模型原理缺陷，导致其生成看似合理但实际上虚假的内容。 |
+| **HBM** | High Bandwidth Memory | 高带宽显存：高性能计算专用的新型显存，是目前大模型推理速度（TBT）的核心瓶颈。 |
+| **HE** | Harness Engineering | 测试评估工程：建立标准化的准出质检流水线。 |
+| **HITL** | Human-in-the-Loop | 人机协作：让智能体在执行高危操作前获取人工授权的机制。 |
+| **HNSW** | Hierarchical Navigable Small World | 分层可导航小世界：工业界最主流的向量检索底层算法。 |
+| **Hybrid Search**| Hybrid Search | 混合搜索：同时结合关键词搜索与向量搜索的检索增强技术。 |
+| **HyDE** | Hypothetical Document Embeddings | 假设性文档嵌入：先让 LLM 生成假设性答案再进行检索的高阶优化策略。 |
+| **KV Cache** | Key-Value Cache | 键值缓存：存储已计算的 Token 状态矩阵，以大幅加速生成的技术。 |
+| **LLM** | Large Language Model | 大语言模型：基于海量参数深度学习神经网络。 |
+| **Logits** | Logits | 原始分：模型在生成词语时输出层产生的原始数值。 |
+| **LoRA** | Low-Rank Adaptation | 低秩微调：对硬件资源极其友好的参数高效对齐训练技术。 |
+| **MCP** | Model Context Protocol | 模型上下文协议：用于统一和标准化大模型应用与外部工具间的数据通信。 |
+| **MLA** | Multi-Head Latent Attention | 多头潜在注意力：通过压缩 KV Cache 解决长文本显存爆炸的核心技术。 |
+| **MLX** | MLX (Apple ML Framework) | 苹果官方机器学习框架：专为 Apple Silicon 统一内存架构优化。 |
+| **MoE** | Mixture of Experts | 混合专家模型：推理时仅激活对应专家的参数模块以平衡计算开销。 |
+| **Multimodal RAG**| Multimodal RAG | 多模态 RAG：支持图片、视频等非文本数据检索与生成的增强架构。 |
+| **NPU** | Neural Processing Unit | 神经网络处理器：在端侧设备中提供比 GPU 更高的能效比。 |
+| **Overfitting**| Overfitting | 过拟合：模型过度适应了训练数据，从而丧失了对新场景的一般化推广能力。 |
+| **PagedAttention** | PagedAttention | 分页注意力机制：vLLM 核心的显存分页管理技术。 |
+| **PEFT** | Parameter-Efficient Fine-Tuning | 参数高效微调：在不改变大模型大部分权重的前提下训练极少量新增参数的技术。 |
+| **Plan-and-Execute** | Plan-and-Execute | 计划并执行模式：Agent 先生成完整计划，再由执行器逐一执行的模式。 |
+| **Prefill** | Prefilling Phase | 预填充阶段：处理输入的 Prompt，属于计算密集型 (Compute-bound)。 |
+| **Pre-training** | Pre-training | 预训练：在大规模无标注原始数据上为模型构建通识世界知识的阶段。 |
+| **Quantization**| Quantization | 模型量化：通过降低模型参数的计算精度大幅压缩模型体积。 |
+| **RAG** | Retrieval-Augmented Generation | 检索增强生成：结合外部知识库检索与大模型生成能力的架构。 |
+| **RAGAS** | RAG Assessment | RAG 评估框架：业内标准的量化评估体系。 |
+| **RBAC** | Role-Based Access Control | 基于角色的访问控制：企业级鉴权防爆手段。 |
+| **ReAct** | Reasoning and Acting | 推理与行动：赋予 Agent 通过“思考->行动->观察反馈”进行决策的经典范式。 |
+| **Reasoning Token** | Reasoning Token | 推理词元：推理模型在内部进行自我反思、纠错与路径探索时产生的 Token。 |
+| **Reflexion** | Reflexion | 反思模式：Agent 通过内部审校角色对输出进行批判与打回重做的范式。 |
+| **Repetition Penalty**| Repetition Penalty | 重复惩罚：模型生成侧调节参数，避免陷入复读。 |
+| **Reranking**| Reranking | 重排：对 RAG 召回片段进行二次深度精算排序。 |
+| **RLHF** | Reinforcement Learning from Human Feedback | 基于人类反馈的强化学习：强行对齐大模型行为与价值观。 |
+| **RLVR** | Reinforcement Learning from Verified Rewards | 基于验证奖励的强化学习：通过编译器反馈等客观指标引导模型进化。 |
+| **ROCm** | Radeon Open Compute | AMD 的开源算力生态：并行计算堆栈，是目前非 NVIDIA 阵营的主流选择。 |
+| **RoPE** | Rotary Position Embedding | 旋转位置编码：主流大模型标配的底层文字位置感知编码方案。 |
+| **Scaling Law** | Scaling Law | 规模扩展法则：算力、参数 and 数据持续增加，模型智能基座稳定上升。 |
+| **Self-Attention** | Self-Attention | 自注意力机制：大模型灵魂，让模型在处理词元时能同时权衡关注全局。 |
+| **Semantic Router**| Semantic Router | 语义路由：利用 Embedding 快速筛选用户意图并导向不同专用 Agent 的组件。 |
+| **SFT** | Supervised Fine-Tuning | 监督微调：使用大量标准问答对训练模型学会遵循任务指示。 |
+| **Sidecar** | Sidecar | 边车模式：AI 网关的一种部署模式，负责流量劫持、脱敏与审计。 |
+| **SNR** | Signal-to-Noise Ratio | 信噪比：衡量提交给大模型文本中真实有用信息与无关干扰信息的比例。 |
+| **Sparse-Dense** | Sparse & Dense Retrieval | 混合检索：结合关键词检索（稀疏）与语义检索（稠密）的技术。 |
+| **Speculative Decoding**| Speculative Decoding | 投机采样：利用小模型快速生成草案并由大模型验证以提升速度。 |
+| **Stateless** | Stateless | 无状态：指模型不具备跨请求的持久记忆，记忆是通过后端重新提交上下文实现的。 |
+| **Structured Output**| Structured Output | 结构化输出：模型能够稳定返回符合特定 Schema 的能力。 |
+| **System-2 Reasoning** | System-2 Reasoning | 慢思考：模型在输出前通过内部思维链进行自我反思、验证与逻辑纠错。 |
+| **TBT** | Time Between Tokens | 词间延迟：模型生成阶段两个连续 Token 之间的平均耗时。 |
+| **Temperature**| Temperature | 温度：调节模型输出随机性的核心控制参数。 |
+| **Token** | Token | 词元：模型处理文本的基础物理单位。 |
+| **Top-p / Top-k**| Top-p / Top-k | 解码采样策略：通过截断低概率分支来控制模型生成的随机词池。 |
+| **TTC** | Test-Time Compute | 推理侧算力扩展：通过增加推理阶段的思考时间来换取逻辑表现。 |
+| **TTFT** | Time to First Token | 首字延迟：从发送请求到模型吐出第一个 Token 的耗时。 |
+| **Vector DB** | Vector Database | 向量数据库：专门为了高效存储与大规模相似度检索 Embedding 而生的数据库。 |
+| **Vibe Coding** | Vibe Coding | 感应式编程：2026 年兴起的开发范式，由自然语言描述意图并由 Agent 补全实现。 |
+| **VLM** | Vision-Language Model | 视觉语言大模型：能够同时理解并融合图片与人类语言语义的模型。 |
+| **VRAM** | Video RAM | 显存：GPU 运行模型时承载权重与 KV Cache 的内存。 |
+| **Zero-shot** | Zero-shot Prompting | 零样本提示：完全不提供演示样例而直接要求模型作答。 |
 
 ### 12.3 修订记录
 
 | 版本 | 日期 | 修订内容摘要 |
 |:----:|:----:|:------------|
 | v0.1 | 2026-04-24 | 版本初始化及全局架构优化 |
+| v0.2 | 2026-04-25 | 深度对齐推理时代范式、完善决策矩阵与术语表 |
 
 ---
 
